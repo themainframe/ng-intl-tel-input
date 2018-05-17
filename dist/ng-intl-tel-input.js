@@ -1,4 +1,5 @@
-angular.module('ngIntlTelInput', []);angular.module('ngIntlTelInput')
+angular.module('ngIntlTelInput', []);
+angular.module('ngIntlTelInput')
   .provider('ngIntlTelInput', function () {
     var me = this;
     var props = {};
@@ -24,6 +25,7 @@ angular.module('ngIntlTelInput', []);angular.module('ngIntlTelInput')
       });
     }];
   });
+
 angular.module('ngIntlTelInput')
   .directive('ngIntlTelInput', ['ngIntlTelInput', '$log', '$window', '$parse',
     function (ngIntlTelInput, $log, $window, $parse) {
@@ -42,6 +44,24 @@ angular.module('ngIntlTelInput')
           }
           // Initialize.
           ngIntlTelInput.init(elm);
+
+          elm.on('keydown', function($event) {
+            if ($event) {
+              var ctrlDown = $event.ctrlKey || $event.metaKey;
+              if (!($event.key === '+' ||
+                $event.keyCode === 8 ||
+                $event.keyCode === 46 ||
+                (ctrlDown && $event.keyCode === 65) ||
+                (ctrlDown && $event.keyCode === 67) ||
+                (ctrlDown && $event.keyCode === 86) ||
+                (ctrlDown && $event.keyCode === 88) ||
+                [1, 2, 3, 4, 5, 6, 7, 8, 9].includes(Number($event.key)))) {
+                $event.stopPropagation();
+                $event.preventDefault();
+              }
+            }
+          });
+
           // Set Selected Country Data.
           function setSelectedCountryData(model) {
             var getter = $parse(model);
